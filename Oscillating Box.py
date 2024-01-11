@@ -178,6 +178,8 @@ class My_Differential_System( Define_Differential_System ):
         
         k = 3.0
         
+        c = 1 # Dampening Coefficient
+        
         #-------------------------------------------
        
         
@@ -186,6 +188,7 @@ class My_Differential_System( Define_Differential_System ):
 
               
         self.par[ 1 ][ 0 ] = k / m 
+        self.par[ 1 ][ 1 ] = c / m 
  
         return
     #---------------------------------------
@@ -211,7 +214,7 @@ class My_Differential_System( Define_Differential_System ):
        
         dq_dt[ 0 ] = q[ 1 ]
         
-        dq_dt[ 1 ] = - par[ 1 ][ 0 ] * q[ 0 ]  
+        dq_dt[ 1 ] = - par[ 1 ][ 0 ] * q[ 0 ]  - par[ 1 ][ 1 ] * q[ 1 ]  # Modified this equation to include the effect of dampening
                 
         #-----------------------------------------------------
         
@@ -237,7 +240,7 @@ class My_Differential_System( Define_Differential_System ):
         #dq_dt[ 1 ] = - par[ 1 ][ 0 ] * q[ 0 ] 
         
         jac_mtrx[ 1 ][ 0 ] =  - par[ 1 ][ 0 ] 
-        jac_mtrx[ 1 ][ 1 ] =  0.0
+        jac_mtrx[ 1 ][ 1 ] =  - par[ 1 ][ 1 ] # Replaced 0.0 with par to include the effect of dampening
        
         #-----------------------------------------------------
         
