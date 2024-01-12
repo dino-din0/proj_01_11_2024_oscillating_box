@@ -172,7 +172,7 @@ class My_Differential_System( Define_Differential_System ):
         self.numb_of_eq     = 2
                
         #-------------------------------------------
-        # Gravitational parametermass and spring constant
+        # Gravitational parametermass and spring 
         
         m = 2.0
         
