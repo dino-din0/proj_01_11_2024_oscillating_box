@@ -170,6 +170,7 @@ class My_Differential_System( Define_Differential_System ):
     def number_of_equations_and_parameters_2( self ):
         
         self.numb_of_eq     = 2
+        self.numb_of_par     = 4 #Added this on 01/16/2024; magnitude of the force
                
         #-------------------------------------------
         # Gravitational parametermass and spring 
@@ -178,17 +179,29 @@ class My_Differential_System( Define_Differential_System ):
         
         k = 3.0
         
-        c = 1 # Dampening Coefficient
+        c = 5.0 # Dampening Coefficient
+        
+        #Everything below here was added because of the new equation 3sin(2t)
+        fs_mag = 3.0 # Sine force; Magnitude
+        
+        omega = 2
+        
         
         #-------------------------------------------
        
         
         #-------------------------------------------   
-        self.par = numpy.zeros( ( self.numb_of_eq, self.numb_of_eq ), dtype = float ) 
-
+        #numpy is a package of functions; numpy.zero initializes the matrix with just zeros
+        #( self.numb_of_eq, self.numb_of_eq ) ; defines a matrix here
+        #dtype ; digital type... is a floating point
+        self.par = numpy.zeros( ( self.numb_of_eq, self.numb_of_par ), dtype = float ) 
               
         self.par[ 1 ][ 0 ] = k / m 
         self.par[ 1 ][ 1 ] = c / m 
+        
+        #Equations added from the new 3sin(2t) equation added to the sum of forces
+        self.par[ 1 ][ 2 ] = fs_mag / m
+        self.par[ 1 ][ 3 ] = omega
  
         return
     #---------------------------------------
@@ -197,7 +210,7 @@ class My_Differential_System( Define_Differential_System ):
         self.q_in      =  numpy.zeros(  self.numb_of_eq, dtype = float )
                
         self.q_in[ 0 ] = 1.0
-        self.q_in[ 1 ] = 0.0
+        self.q_in[ 1 ] = 3.0
             
         return
 
@@ -208,13 +221,13 @@ class My_Differential_System( Define_Differential_System ):
         #-----------------------------------------------------
         
         dq_dt = numpy.zeros(  self.numb_of_eq, dtype = float )
-        par = self.par
+        par = self.par # this will allow us to use par instead of self.par
         
         #-----------------------------------------------------
        
         dq_dt[ 0 ] = q[ 1 ]
         
-        dq_dt[ 1 ] = - par[ 1 ][ 0 ] * q[ 0 ]  - par[ 1 ][ 1 ] * q[ 1 ]  # Modified this equation to include the effect of dampening
+        dq_dt[ 1 ] = - par[ 1 ][ 0 ] * q[ 0 ]  - par[ 1 ][ 1 ] * q[ 1 ]  + par[ 1 ][ 2 ] * math.sin( par[ 1 ][ 3 ] * t )# Modified this equation to include the effect of dampening
                 
         #-----------------------------------------------------
         
@@ -237,10 +250,12 @@ class My_Differential_System( Define_Differential_System ):
         jac_mtrx[ 0 ][ 0 ] = 0.0
         jac_mtrx[ 0 ][ 1 ] = 1.0   
 
-        #dq_dt[ 1 ] = - par[ 1 ][ 0 ] * q[ 0 ] 
+        #dq_dt[ 1 ] = - par[ 1 ][ 0 ] * q[ 0 ]  - par[ 1 ][ 1 ] * q[ 1 ]
+        #jac_mtrx = Jacobian Matrix; This ensures the accuracy of the computation
+        #Jacobians are a matrix of partial derivatives containing x and v_x. The time dependent force does not affect the Jacobian.
         
-        jac_mtrx[ 1 ][ 0 ] =  - par[ 1 ][ 0 ] 
-        jac_mtrx[ 1 ][ 1 ] =  - par[ 1 ][ 1 ] # Replaced 0.0 with par to include the effect of dampening
+        jac_mtrx[ 1 ][ 0 ] =  - par[ 1 ][ 0 ] # Replaced 0.0 with par to include the effect of dampening
+        jac_mtrx[ 1 ][ 1 ] =  - par[ 1 ][ 1 ] 
        
         #-----------------------------------------------------
         
