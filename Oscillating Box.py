@@ -179,12 +179,12 @@ class My_Differential_System( Define_Differential_System ):
         
         k = 3.0
         
-        c = 5.0 # Dampening Coefficient
+        c = 2.0 * math.sqrt( k * m ) # Dampening Coefficient ; 2.0 * math.sqrt( k * m ) [non-imaginary] was derived from today's lecture (01/18/2024)Threshhold to where there are no ocsillations
         
         #Everything below here was added because of the new equation 3sin(2t)
-        fs_mag = 3.0 # Sine force; Magnitude
+        fs_mag = 0.0 # Sine force; Magnitude ; When at 0.0, that means that there is no external magnitude force
         
-        omega = 2
+        omega = 0.5 # Freqeuncy <- Increases to the Freq = Less magnitude
         
         
         #-------------------------------------------
@@ -606,7 +606,7 @@ class Perform_animation:
 main()
 #-------------------------------------------------------
 
-
+# 
 
 
 
